@@ -20,8 +20,15 @@ const client = new MongoClient(uri, {
   },
 });
 
+const todoCollections = client.db('daily-doerDB').collection('todo-lists');
+
 async function run() {
   try {
+    app.get('/todo-lists', async (req, res) => {
+      result = await todoCollections.find().toArray();
+      res.send(result);
+    });
+
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
@@ -31,7 +38,7 @@ async function run() {
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
