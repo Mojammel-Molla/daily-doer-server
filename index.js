@@ -28,6 +28,10 @@ async function run() {
       result = await todoCollections.find().toArray();
       res.send(result);
     });
+    app.post('/todo-lists', async (req, res) => {
+      result = await todoCollections.insertOne();
+      res.send(result);
+    });
 
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
