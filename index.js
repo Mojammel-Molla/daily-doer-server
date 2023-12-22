@@ -28,6 +28,13 @@ async function run() {
       result = await todoCollections.find().toArray();
       res.send(result);
     });
+    app.get('/todo-lists/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      result = await todoCollections.findOne(query);
+      res.send(result);
+    });
+
     app.post('/todo-lists', async (req, res) => {
       const newTask = req.body;
       result = await todoCollections.insertOne(newTask);
@@ -37,6 +44,23 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       result = await todoCollections.deleteOne(query);
+      res.send(result);
+    });
+
+    app.put('/todo-lists/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedTask = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const newData = {
+        $set: {
+          title: updatedTask.title,
+          description: updatedTask.description,
+          deadline: updatedTask.deadline,
+          priority: updatedTask.priority,
+        },
+      };
+      const result = await todoCollections.updateOne(filter, newData, options);
       res.send(result);
     });
 
